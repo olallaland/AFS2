@@ -22,13 +22,13 @@ public class ServerControl {
 		
 		HashMap<String, Integer> launchedManagers = new HashMap<String, Integer>();
 		String[] input;
-		LocateRegistry.createRegistry(1099);
+		LocateRegistry.createRegistry(8888);
 		//System.setProperty("java.rmi.server.hostname","127.0.0.1");
 		
 		Registry registry = LocateRegistry.getRegistry();
 		
 		while(true) {
-			System.out.println("launch/termiante [server name](if more than one, split them with spaces...): ");
+			System.out.println("launch/terminate [server name](if more than one, split them with spaces...): ");
 			Scanner reader = new Scanner(System.in);
 			input = reader.nextLine().trim().split(" ");
 			
@@ -60,6 +60,12 @@ public class ServerControl {
 		}
 	}
 
+	/**
+	 * 列出已上线的Server
+	 * @param registry
+	 * @throws AccessException
+	 * @throws RemoteException
+	 */
 	private static void listServer(Registry registry) throws AccessException, RemoteException {
 		String[] list = registry.list();
 		for(int i = 0;  i < list.length; i++) {
@@ -67,6 +73,11 @@ public class ServerControl {
 		}
 	}
 
+	/**
+	 * 下线输入的服务（unbind）
+	 * @param input
+	 * @param registry
+	 */
 	private static void terminateServer(String[] input, Registry registry) {
 		for(int i = 1; i < input.length; i++) {
 		
@@ -84,6 +95,11 @@ public class ServerControl {
 		
 	}
 
+	/**
+	 * 启动输入的服务(创建对应的FM或BM Server对象)
+	 * @param input
+	 * @param registry
+	 */
 	private static void launchServer(String[] input, Registry registry) {
 		String regexBM = "^bm-([1-9]|10)";
 		String regexFM = "^fm-([1-8])";

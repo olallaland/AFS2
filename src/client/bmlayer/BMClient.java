@@ -1,5 +1,11 @@
 package client.bmlayer;
-import java.io.UnsupportedEncodingException;
+import alpha.Block;
+import alpha.BlockManager;
+import alpha.IRemoteBM;
+import alpha.Id;
+import alpha.exception.ErrorCode;
+import alpha.id.StringId;
+
 import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -8,14 +14,6 @@ import java.rmi.registry.Registry;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.*;
-
-import alpha.Block;
-import alpha.BlockManager;
-import alpha.exception.ErrorCode;
-import alpha.Id;
-import alpha.id.IntegerId;
-import alpha.id.StringId;
-import alpha.IRemoteBM;
 
 public class BMClient implements BlockManager {
 	public IRemoteBM remoteBM;
@@ -65,11 +63,18 @@ public class BMClient implements BlockManager {
 		
 	}
 	
-	public BMClient(Id bmId, Registry registry) {
+	public BMClient(Id bmId) {
 		this.bmId = bmId;
 		String sid = getStringBMId();
 		System.out.println("this is my bm id: " + sid);
-		
+
+		Registry registry = null;
+
+		try {
+			registry = LocateRegistry.getRegistry("localhost");
+		} catch (RemoteException e) {
+			throw new ErrorCode(19);
+		}
 		//String[] list = registry.list();
 //		for(int i = 0; i < list.length; i++) {
 //			System.out.println(list[i]);
@@ -120,11 +125,31 @@ public class BMClient implements BlockManager {
 
 	@Override
 	public Block newBlock(byte[] b) {
+		Block block;
+		// ³¬Ê±¼ì²é
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		FutureTask<Block> future = new FutureTask<Block>(new Callable<Block>() {
+			@Override
+			public Block call() throws Exception {
+				return remoteBM.newBlock(b);
+			}
+		});
+
+		executor.execute(future);
 		try {
-			return remoteBM.newBlock(b);
-		} catch (Exception e) {
-			throw new ErrorCode(1000);
+			block = future.get(1000, TimeUnit.MILLISECONDS);
+		} catch (ErrorCode e) {
+			throw new ErrorCode(e.getErrorCode());
+		} catch (InterruptedException | ExecutionException e) {
+			ErrorCode e1 = (ErrorCode) e.getCause();
+			throw new ErrorCode(e1.getErrorCode());
+		} catch (TimeoutException e) {
+			throw new ErrorCode(22);
+		} finally {
+			future.cancel(true);
+			executor.shutdown();
 		}
+		return block;
 	}
 	
 	

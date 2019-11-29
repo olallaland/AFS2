@@ -12,7 +12,6 @@ public abstract class Server extends UnicastRemoteObject {
 
 	protected Server() throws RemoteException {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	
 }

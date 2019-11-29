@@ -4,10 +4,9 @@ import alpha.File;
 import alpha.FileManager;
 import alpha.IFileMeta;
 import alpha.exception.ErrorCode;
+import alpha.id.StringId;
 import client.fmlayer.FMClient;
 import client.fmlayer.FileImpl;
-import client.fmlayer.FileManagerImpl;
-import alpha.id.StringId;
 
 public class SetFileSizeCmd extends Command {
 	public SetFileSizeCmd(String[] cmds) throws Exception {

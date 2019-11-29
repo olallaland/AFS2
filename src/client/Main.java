@@ -109,16 +109,6 @@ public class Main {
 				}
 			}
 		}
-		
-		//System.out.println(FileUtil.createFile("fmlayer/fmlayer-1/haha.meta"));
-		//System.out.println(FileUtil.exsits("haha"));
 	}
-	
-	/*
-	public static void main(String args[]) throws IOException {
-		//FileUtil.updateIdCount(5162313);
-		System.out.println(FileUtil.readIdCount());
-		
-	}
-	*/
+
 }

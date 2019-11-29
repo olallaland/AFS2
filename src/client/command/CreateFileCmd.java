@@ -1,13 +1,10 @@
 package client.command;
 
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-
-import client.fmlayer.FMClient;
-import alpha.exception.ErrorCode;
 import alpha.File;
 import alpha.IFileMeta;
+import alpha.exception.ErrorCode;
 import alpha.id.StringId;
+import client.fmlayer.FMClient;
 
 public class CreateFileCmd extends Command {
 	public CreateFileCmd(String[] cmds) throws Exception {

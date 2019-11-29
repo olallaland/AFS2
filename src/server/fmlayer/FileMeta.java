@@ -1,18 +1,16 @@
 package server.fmlayer;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import client.bmlayer.BlockImpl;
-import alpha.constant.FileConstant;
-import alpha.exception.ErrorCode;
 import alpha.IFileMeta;
 import alpha.Id;
+import alpha.constant.FileConstant;
+import alpha.exception.ErrorCode;
 import alpha.id.StringId;
 import alpha.util.FileUtil;
 import alpha.util.SerializeUtil;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class FileMeta implements Serializable, IFileMeta {
 	long fileSize;
@@ -195,7 +193,6 @@ public class FileMeta implements Serializable, IFileMeta {
 
     @Override
 	public void addLogicBlocks(int index, LinkedHashMap<Id, Integer> list) {
-
 		logicBlocks.put(index, list);
 
 	}

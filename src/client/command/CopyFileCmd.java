@@ -3,14 +3,11 @@ package client.command;
 import alpha.File;
 import alpha.FileManager;
 import alpha.IFileMeta;
-import alpha.constant.FileConstant;
 import alpha.exception.ErrorCode;
+import alpha.id.StringId;
 import client.fmlayer.FMClient;
 import client.fmlayer.FileImpl;
-import client.fmlayer.FileManagerImpl;
 import client.fmlayer.FileMeta;
-import alpha.id.StringId;
-import alpha.util.FileUtil;
 
 public class CopyFileCmd extends Command {
 	public CopyFileCmd(String[] cmds) {

@@ -1,17 +1,12 @@
 package client.command;
 
-import java.io.UnsupportedEncodingException;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-
 import alpha.File;
-import client.fmlayer.FMClient;
 import alpha.exception.ErrorCode;
-import client.fmlayer.FileImpl;
-import client.fmlayer.FileManagerImpl;
-import alpha.IFileMeta;
 import alpha.id.StringId;
+import client.fmlayer.FMClient;
+import client.fmlayer.FileImpl;
+
+import java.io.UnsupportedEncodingException;
 
 public class WriteFileCmd extends Command {
 	
@@ -38,9 +33,6 @@ public class WriteFileCmd extends Command {
 		String stringFMId = cmds[1];
 		String filename = cmds[2];
 		String content = "";
-		IFileMeta fileMeta = null;
-		String fmStringId = "";
-		FileManagerImpl fm = null;
 		File remoteFile;
 	
 		try {

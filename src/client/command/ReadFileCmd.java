@@ -1,20 +1,14 @@
 package client.command;
 
-import java.io.UnsupportedEncodingException;
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-
 import alpha.File;
 import alpha.FileManager;
 import alpha.IFileMeta;
 import alpha.exception.ErrorCode;
+import alpha.id.StringId;
 import client.fmlayer.FMClient;
 import client.fmlayer.FileImpl;
-import client.fmlayer.FileManagerImpl;
-import client.fmlayer.FileMeta;
-import alpha.id.StringId;
+
+import java.io.UnsupportedEncodingException;
 
 public class ReadFileCmd extends Command {
 	public ReadFileCmd(String[] cmds) {

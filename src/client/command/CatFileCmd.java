@@ -1,18 +1,16 @@
 package client.command;
 
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.util.HashMap;
-import java.util.LinkedList;
-
-import client.bmlayer.BlockImpl;
-import client.fmlayer.FMClient;
-import alpha.exception.ErrorCode;
 import alpha.File;
-import client.fmlayer.FileImpl;
 import alpha.FileManager;
 import alpha.IFileMeta;
+import alpha.exception.ErrorCode;
 import alpha.id.StringId;
+import client.bmlayer.BlockImpl;
+import client.fmlayer.FMClient;
+import client.fmlayer.FileImpl;
+
+import java.util.HashMap;
+import java.util.LinkedList;
 
 public class CatFileCmd extends Command {
 	public CatFileCmd(String[] cmds) {

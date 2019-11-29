@@ -1,16 +1,15 @@
 package server.bmlayer;
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import alpha.Block;
 import alpha.BlockManager;
+import alpha.Id;
 import alpha.constant.FileConstant;
 import alpha.exception.ErrorCode;
 import alpha.id.IntegerId;
 import alpha.id.StringId;
-import alpha.Id;
 import alpha.util.FileUtil;
+
+import java.io.Serializable;
 
 public class BlockImpl implements Block, Serializable {
 	/**
@@ -72,14 +71,11 @@ public class BlockImpl implements Block, Serializable {
 			return "";
 		}
 	}
-	
-	public String getPath() {
-		return this.path;
-	}
-	
+
 	public boolean isValid() {
 		String dataPath = this.path + FileConstant.DATA_SUFFIX;
 		byte[] tempContent = null;
+		boolean result = false;
 
 		//检查data文件是否存在，若存在读出内容
 		try {
@@ -90,14 +86,14 @@ public class BlockImpl implements Block, Serializable {
 		if(!FileUtil.exists(path + FileConstant.META_SUFFIX)) {
 			throw new ErrorCode(15);
 		}
-//		System.out.println(blockMeta.checkSum);
-//		System.out.println(checkSum(tempContent));
+
 		if(blockMeta.getCheckSum() == checkSum(tempContent)) {
+			result = true;
 			System.out.println("block " + getIntegerBlockId() + " is valid");
 		} else {
 			System.out.println("block " + getIntegerBlockId() + " is invalid");
 		}
-		return blockMeta.getCheckSum() == checkSum(tempContent);
+		return result;
 	}
 
 	@Override
@@ -115,7 +111,7 @@ public class BlockImpl implements Block, Serializable {
 		writeBlockMeta();
 		return 0;
 	}
-	//blockData和blockMeta文件
+
 	int writeBlockData() {
 		try {
 			FileUtil.writes(blockData, path + FileConstant.DATA_SUFFIX);

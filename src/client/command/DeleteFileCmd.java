@@ -2,11 +2,9 @@ package client.command;
 
 import alpha.FileManager;
 import alpha.exception.ErrorCode;
-import alpha.id.IntegerId;
+import alpha.id.StringId;
 import client.fmlayer.FMClient;
 import client.fmlayer.FileImpl;
-import client.fmlayer.FileManagerImpl;
-import alpha.id.StringId;
 
 public class DeleteFileCmd extends Command {
     public DeleteFileCmd(String[] cmds) {

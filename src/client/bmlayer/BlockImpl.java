@@ -1,16 +1,15 @@
 package client.bmlayer;
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import alpha.Block;
 import alpha.BlockManager;
+import alpha.Id;
 import alpha.constant.FileConstant;
 import alpha.exception.ErrorCode;
 import alpha.id.IntegerId;
 import alpha.id.StringId;
-import alpha.Id;
 import alpha.util.FileUtil;
+
+import java.io.Serializable;
 
 public class BlockImpl implements Block, Serializable {
 	/**
@@ -156,7 +155,7 @@ public class BlockImpl implements Block, Serializable {
 	}
 	@Override
 	public BlockManager getBlockManager() {
-		return new BlockManagerImpl(bmId);
+		return new BMClient(bmId);
 	}
 
 }

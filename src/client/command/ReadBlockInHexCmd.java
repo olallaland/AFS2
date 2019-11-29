@@ -1,17 +1,15 @@
 package client.command;
 
+import alpha.Block;
+import alpha.exception.ErrorCode;
+import alpha.id.IntegerId;
+import alpha.id.StringId;
+import client.bmlayer.BMClient;
+
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-
-import alpha.Block;
-import client.bmlayer.BlockImpl;
-import client.bmlayer.BlockManagerImpl;
-import client.bmlayer.BMClient;
-import alpha.exception.ErrorCode;
-import alpha.id.IntegerId;
-import alpha.id.StringId;
 
 public class ReadBlockInHexCmd extends Command {
 	public ReadBlockInHexCmd(String[] cmds) {
@@ -30,10 +28,7 @@ public class ReadBlockInHexCmd extends Command {
 	private void readBlockInHex(String[] input) throws RemoteException {
 		byte[] blockData = null;
 		String bmStringId = "";
-		BlockManagerImpl bm;
-		BlockImpl block;
 		int id;
-		Registry registry = LocateRegistry.getRegistry("localhost");
 
 		bmStringId = input[1];
 		try {
@@ -43,7 +38,7 @@ public class ReadBlockInHexCmd extends Command {
 		}
 		
 		try {
-			BMClient bmc = new BMClient(new StringId(bmStringId), registry);
+			BMClient bmc = new BMClient(new StringId(bmStringId));
 			Block blockRead = bmc.getBlock(new IntegerId(id));
 			blockData = blockRead.getBlockData();
 			
@@ -59,30 +54,7 @@ public class ReadBlockInHexCmd extends Command {
 			}
 		}
 		System.out.println();
-//
-//		try {
-//			bmStringId = findBm(blockId);
-//			bm = new BlockManagerImpl(new StringId(bmStringId));
-//			block = (BlockImpl)bm.getBlock(new IntegerId(id));
-//		} catch (ErrorCode e) {
-//			throw new ErrorCode(e.getErrorCode());
-//		}
 
-		
-		
-		
-//		if(blockRead.isValid()) {
-//			blockData = block.read();
-//			for(int i = 0; i < blockData.length; i++) {
-//				System.out.print("0x" + Integer.toHexString(blockData[i] & 0xFF) + " ");
-//				if((i + 1) % 16 == 0) {
-//					System.out.println();
-//				}
-//			}
-//			System.out.println();
-//		} else {
-//			throw new ErrorCode(2);
-//		}
 	}
 
 }

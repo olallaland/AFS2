@@ -83,11 +83,30 @@ public class FMClient implements FileManager {
 	@Override
 	public File newFile(Id fileId) throws Exception {
 		File file = null;
+		// ³¬Ê±¼ì²é
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		FutureTask<File> future = new FutureTask<File>(new Callable<File>() {
+			@Override
+			public File call() throws Exception {
+				return remoteFM.newFile(fileId);
+			}
+		});
+
+		executor.execute(future);
 		try {
-			file = (File)remoteFM.newFile(fileId);
+			file = future.get(1000, TimeUnit.MILLISECONDS);
 		} catch (ErrorCode e) {
 			throw new ErrorCode(e.getErrorCode());
+		} catch (InterruptedException | ExecutionException e) {
+			ErrorCode e1 = (ErrorCode) e.getCause();
+			throw new ErrorCode(e1.getErrorCode());
+		} catch (TimeoutException e) {
+			throw new ErrorCode(22);
+		} finally {
+			future.cancel(true);
+			executor.shutdown();
 		}
+
 		return file;
 	}
 	

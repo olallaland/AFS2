@@ -61,7 +61,7 @@ public class FileImpl implements File, Serializable {
 
 	@Override
 	public FileManager getFileManager() {
-		return new FileManagerImpl(fileMeta.getFmId());
+		return new FMClient(fileMeta.getFmId());
 	}
 	
 	@Override
@@ -431,7 +431,7 @@ public class FileImpl implements File, Serializable {
             Map.Entry entity = (Map.Entry) it.next();
             try {
 
-                BMClient bmc = new BMClient((StringId)entity.getKey(), LocateRegistry.getRegistry("localhost"));
+                BMClient bmc = new BMClient((StringId)entity.getKey());
                 Block blockRead = bmc.getBlock(new IntegerId((Integer)entity.getValue()));
                 blockData = blockRead.getBlockData();
                 System.out.println(new String(blockData, "utf-8"));

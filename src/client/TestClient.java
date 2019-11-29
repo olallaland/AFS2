@@ -11,6 +11,7 @@ import java.util.Scanner;
 import java.util.concurrent.*;
 
 import alpha.Block;
+import alpha.IRemoteBM;
 import alpha.exception.ErrorCode;
 import alpha.id.IntegerId;
 import alpha.id.StringId;
@@ -20,19 +21,30 @@ import client.bmlayer.BMClient;
 public class TestClient {
 	public static void main(String args[]) throws RemoteException {
 
+//		try {
+//			//test();
+//		} catch(RuntimeException e) {
+//			System.out.println(e.getMessage());
+//		}
+//
+//		while(true) {
+//			System.out.println("input: ");
+//			Scanner scanner = new Scanner(System.in);
+//			String input = scanner.nextLine();
+//			String regexFM = "^fm-([1-8])";
+//			System.out.println(input.matches(regexFM));
+//
+//		}
+
+		Registry registry = LocateRegistry.getRegistry("localhost");
+		IRemoteBM remote;
 		try {
-			//test();
-		} catch(RuntimeException e) {
+			String[] list = registry.list();
+			for(int i = 0; i < list.length; i++) {
+				System.out.println(list[i]);
+			}
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
-		}
-
-		while(true) {
-			System.out.println("input: ");
-			Scanner scanner = new Scanner(System.in);
-			String input = scanner.nextLine();
-			String regexFM = "^fm-([1-8])";
-			System.out.println(input.matches(regexFM));
-
 		}
 
 
@@ -47,7 +59,7 @@ public class TestClient {
 					System.out.println(list[i]);
 				}
 //
-				bmc = new BMClient(new StringId("bm-10"), registry);
+				bmc = new BMClient(new StringId("bm-10"));
 				//Block blockRead = bmc.getBlock(new IntegerId(160));
 				//byte[] tempContent = blockRead.getBlockData();
 				//System.out.println(new String(blockRead.getBlockData()));

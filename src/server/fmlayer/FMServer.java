@@ -1,21 +1,20 @@
 package server.fmlayer;
 
-import java.io.IOException;
+import alpha.File;
+import alpha.IFileMeta;
+import alpha.IRemoteFM;
+import alpha.Id;
+import alpha.constant.FileConstant;
+import alpha.exception.ErrorCode;
+import alpha.id.StringId;
+import alpha.util.FileUtil;
+import alpha.util.SerializeUtil;
+import server.Server;
+
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
-import alpha.constant.FileConstant;
-import alpha.exception.ErrorCode;
-import alpha.File;
-import alpha.IFileMeta;
-import alpha.Id;
-import alpha.id.StringId;
-import alpha.IRemoteFM;
-import alpha.util.FileUtil;
-import alpha.util.SerializeUtil;
-import server.Server;
 
 public class FMServer extends Server implements IRemoteFM {
 	/**
@@ -31,7 +30,9 @@ public class FMServer extends Server implements IRemoteFM {
 	}
 
 	/**
-	 * 在启动FM Server时就把其所有管理的file列出来
+	 * 根据输入的fm Id 创建FM Server对象
+	 * @param fmId
+	 * @throws RemoteException
 	 */
 	public FMServer(Id fmId) throws RemoteException {
 		this.fmId = fmId;
@@ -44,11 +45,20 @@ public class FMServer extends Server implements IRemoteFM {
 			fileSet.put(fileNameSet.get(i), null);
 			System.out.println("file in " + getStringFMId() + ": " + fileNameSet.get(i));
 		}
-		
 	}
 
+	/**
+	 * 根据输入的file Id返回File对象
+	 * @param fileId
+	 * @return
+	 */
 	@Override
 	public File getFile(Id fileId) {
+//		try {
+//			Thread.sleep(5000);
+//		} catch (InterruptedException e) {
+//			System.out.println(e.getMessage());
+//		}
 		String id = "";
 		IFileMeta fileMeta = null;
 		if(fileId instanceof StringId) {
@@ -67,7 +77,7 @@ public class FMServer extends Server implements IRemoteFM {
 		} else {
 			try {
 				fileMeta = getFileMeta(id);
-				System.out.println("lalala method in fmlayer server, my filemeta is " + fileMeta);
+				//System.out.println("my filemeta is " + fileMeta);
 			} catch (RuntimeException e) {
 				throw new ErrorCode(12);
 			}
@@ -80,6 +90,11 @@ public class FMServer extends Server implements IRemoteFM {
 
 	@Override
 	public File newFile(Id fileId) throws Exception {
+//		try {
+//			Thread.sleep(5000);
+//		} catch (InterruptedException e) {
+//			System.out.println(e.getMessage());
+//		}
 		String id = "";
 		FileImpl file = null;
 		if(fileId instanceof StringId) {
@@ -106,13 +121,18 @@ public class FMServer extends Server implements IRemoteFM {
 
 		return file;
 	}
-	
+
+	/**
+	 * 从存储介质中读取fileMeta
+	 * @param filename
+	 * @return
+	 */
 	IFileMeta getFileMeta(String filename) {
 
 		byte[] serializedContent;
 		String path = FileConstant.FM_CWD + FileConstant.PATH_SEPARATOR + getStringFMId()
 				+ FileConstant.PATH_SEPARATOR + filename + FileConstant.META_SUFFIX;
-		System.out.println("path~~ " + path);
+		//System.out.println("path~~ " + path);
 		if(FileUtil.exists(path)) {
 			//获得filemeta文件内容
 			serializedContent = FileUtil.reads(path);
@@ -120,7 +140,7 @@ public class FMServer extends Server implements IRemoteFM {
 			System.out.println(fileMeta.toString());
 			return fileMeta;
 		} else {
-			System.out.println("filemeta not exists!");
+			System.out.println("fileMeta not exists!");
 			throw new ErrorCode(4);
 		}
 	}
@@ -135,6 +155,10 @@ public class FMServer extends Server implements IRemoteFM {
 		}
 	}
 
+	/**
+	 * 将filename添加到对应的file manager的fileList.txt文件下
+	 * @param filename
+	 */
 	public void addFileToList(String filename) {
 		//1. 如果对应fm的目录下没有fileList文件，则创建一个
 		//2. 将filename按行写入fileList
@@ -153,14 +177,18 @@ public class FMServer extends Server implements IRemoteFM {
 		return getStringFMId();
 	}
 
+	/**
+	 * 更新file信息，并更新fileSet
+	 * @param fileMeta
+	 * @throws Exception
+	 */
 	@Override
 	public void updateFile(IFileMeta fileMeta) throws Exception {
-		System.out.println(fileMeta.getClass());
-		System.out.println("lalala update filemeta in server, and file meta: " + fileMeta.toString());
+		//System.out.println(fileMeta.getClass());
+
 		String path = FileConstant.FM_CWD + FileConstant.PATH_SEPARATOR + getStringFMId() +
 				FileConstant.PATH_SEPARATOR + fileMeta.getStringFileId() + FileConstant.META_SUFFIX;
-		
-		System.out.println("lalala update filemeta in server: " + path);
+
 		byte[] bytes;
 		try {
 			bytes = SerializeUtil.toBytes(fileMeta);
@@ -177,6 +205,15 @@ public class FMServer extends Server implements IRemoteFM {
 		//System.out.println(SerializeUtil.toBytes(this, path));
 	}
 
+	/**
+	 * 删除文件，共三步：
+	 * 1. 将文件从fileSet中移除
+	 * 2. 将filename从该fm的fileList.txt中移除
+	 * 3. 删除文件的fileMeta
+	 * @param fileId
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
 	public String deleteFile(Id fileId) throws Exception {
 		System.out.println("the filename to delete:" + fileId.getId());
