@@ -20,14 +20,12 @@ public class DeleteFileCmd extends Command {
     }
 
     private void deleteFile(String fmStringId, String filename) {
-        FileImpl file = null;
         FileManager fm = null;
 
-        System.out.println(fmStringId + ", " + filename);
+        //System.out.println(fmStringId + ", " + filename);
         try{
             fm = new FMClient(new StringId(fmStringId));
-            fm.deleteFile(new StringId(filename));
-            //System.out.println(fm.deleteFile(new StringId(filename)));
+            System.out.println(fm.deleteFile(new StringId(filename)));
 
             FileImpl localFile;
             // file is already opened, delete the local file

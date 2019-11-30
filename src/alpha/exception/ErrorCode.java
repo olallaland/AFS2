@@ -31,6 +31,7 @@ public class ErrorCode extends RuntimeException {
 	public static final int NULL_POINTER_EXCEPTION = 20;
 	public static final int NO_AVAILABLE_BM_SERVER = 21;
 	public static final int SERVER_RESPONSE_TIMEOUT = 22;
+	public static final int EXECUTE_INTERRUPTED = 23;
 	
 	public static final int UNKNOWN = 1000;
 	
@@ -52,12 +53,13 @@ public class ErrorCode extends RuntimeException {
 		ErrorCodeMap.put(SERIALIZED_ERROR, "serialize error");
 		ErrorCodeMap.put(BLOCK_INFORMATION_LOSS, "block data or meta loss");
 		ErrorCodeMap.put(FILE_HOLE_EXCEPTION, "file empty hole exception");
-		ErrorCodeMap.put(SET_FILE_SIZE_NEGATIVE, "set a negative length of the file");
+		ErrorCodeMap.put(SET_FILE_SIZE_NEGATIVE, "cannot set a negative length of the file");
 		ErrorCodeMap.put(SERVER_NOT_BOUND, "server not bound(haven't launched)");
 		ErrorCodeMap.put(REMOTE_EXCEPTION, "remote exception");
 		ErrorCodeMap.put(NULL_POINTER_EXCEPTION, "null pointer exception");
 		ErrorCodeMap.put(NO_AVAILABLE_BM_SERVER, "no available bm server now");
 		ErrorCodeMap.put(SERVER_RESPONSE_TIMEOUT, "server response timeout exception");
+		ErrorCodeMap.put(EXECUTE_INTERRUPTED, "execution interrupted");
 		
 		ErrorCodeMap.put(UNKNOWN, "unknown");
 	}

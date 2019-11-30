@@ -30,7 +30,6 @@ public class BMClient implements BlockManager {
 			serverList = registry.list();
 			
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			throw new ErrorCode(19);
 		}
 		
@@ -47,6 +46,7 @@ public class BMClient implements BlockManager {
 			
 			//random choose a bm server
 			int index = (int) (Math.random() * bmServerList.size());
+			System.out.println(bmServerList.size());
 			try {
 				client = (IRemoteBM) registry.lookup(bmServerList.get(index));
 			} catch (AccessException e) {
@@ -66,7 +66,8 @@ public class BMClient implements BlockManager {
 	public BMClient(Id bmId) {
 		this.bmId = bmId;
 		String sid = getStringBMId();
-		System.out.println("this is my bm id: " + sid);
+		IRemoteBM client = null;
+		//System.out.println("this is my bm id: " + sid);
 
 		Registry registry = null;
 
@@ -75,11 +76,6 @@ public class BMClient implements BlockManager {
 		} catch (RemoteException e) {
 			throw new ErrorCode(19);
 		}
-		//String[] list = registry.list();
-//		for(int i = 0; i < list.length; i++) {
-//			System.out.println(list[i]);
-//		}
-		IRemoteBM client = null;
 		
 		try {
 			client = (IRemoteBM) registry.lookup(sid);
@@ -108,7 +104,7 @@ public class BMClient implements BlockManager {
 		Block blockRead;
 		executor.execute(future);
 		try {
-			blockRead = future.get(1000, TimeUnit.MILLISECONDS);
+			blockRead = future.get(3000, TimeUnit.MILLISECONDS);
 		} catch (ErrorCode e) {
 			throw new ErrorCode(e.getErrorCode());
 		} catch (InterruptedException | ExecutionException e) {

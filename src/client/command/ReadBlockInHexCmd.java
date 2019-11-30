@@ -44,6 +44,8 @@ public class ReadBlockInHexCmd extends Command {
 			
 		} catch (NotBoundException e) {
 			throw new ErrorCode(18);
+		} catch (ErrorCode e) {
+			throw new ErrorCode(e.getErrorCode());
 		} catch (Exception e) {
 			throw new ErrorCode(1000);
 		}

@@ -64,7 +64,7 @@ public class FMClient implements FileManager {
 
 		executor.execute(future);
 		try {
-			file = future.get(1000, TimeUnit.MILLISECONDS);
+			file = future.get(500, TimeUnit.MILLISECONDS);
 		} catch (ErrorCode e) {
 			throw new ErrorCode(e.getErrorCode());
 		} catch (InterruptedException | ExecutionException e) {
@@ -94,7 +94,7 @@ public class FMClient implements FileManager {
 
 		executor.execute(future);
 		try {
-			file = future.get(1000, TimeUnit.MILLISECONDS);
+			file = future.get(500, TimeUnit.MILLISECONDS);
 		} catch (ErrorCode e) {
 			throw new ErrorCode(e.getErrorCode());
 		} catch (InterruptedException | ExecutionException e) {
@@ -133,14 +133,29 @@ public class FMClient implements FileManager {
 	@Override
 	public String deleteFile(Id fileId) throws Exception {
 		String result = "";
-		System.out.println("delete file: " + (String)fileId.getId());
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		FutureTask<String> future = new FutureTask<String>(new Callable<String>() {
+			@Override
+			public String call() throws Exception {
+				return remoteFM.deleteFile(fileId);
+			}
+		});
+
+		executor.execute(future);
 		try {
-			result = remoteFM.deleteFile(fileId);
+			result = future.get(500, TimeUnit.MILLISECONDS);
 		} catch (ErrorCode e) {
 			throw new ErrorCode(e.getErrorCode());
-		} catch (Exception e) {
-			throw new ErrorCode(1000);
+		} catch (InterruptedException | ExecutionException e) {
+			ErrorCode e1 = (ErrorCode) e.getCause();
+			throw new ErrorCode(e1.getErrorCode());
+		} catch (TimeoutException e) {
+			throw new ErrorCode(22);
+		} finally {
+			future.cancel(true);
+			executor.shutdown();
 		}
+
 		return result;
 	}
 }

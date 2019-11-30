@@ -40,7 +40,7 @@ public class SetFileSizeCmd extends Command {
 			throw new ErrorCode(17);
 		}
 
-		System.out.println("new length:" + length);
+		//System.out.println("new length:" + length);
 		try {
 			fm = new FMClient(new StringId(sfmId));
 			file = fm.getFile(new StringId(filename));

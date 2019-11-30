@@ -22,7 +22,7 @@ public class ServerControl {
 		
 		HashMap<String, Integer> launchedManagers = new HashMap<String, Integer>();
 		String[] input;
-		LocateRegistry.createRegistry(8888);
+		LocateRegistry.createRegistry(1099);
 		//System.setProperty("java.rmi.server.hostname","127.0.0.1");
 		
 		Registry registry = LocateRegistry.getRegistry();

@@ -111,8 +111,6 @@ public class FileImpl implements File, Serializable {
 
 		//原文件长度小于或等于新的长度，在后面加0x00
 		if(diff > 0) {
-			System.out.println("new size is more than old size:" + diff);
-
 			byte[] addition;
 			int leftOver = (int)oldSize % FileConstant.BLOCK_SIZE;
 			addition = new byte[diff + leftOver];
@@ -127,9 +125,9 @@ public class FileImpl implements File, Serializable {
 				} catch (ErrorCode e) {
 					throw new ErrorCode(e.getErrorCode());
 				}
-				System.out.println("old file leftover is 0:" + diff);
+
 			} else {
-				System.out.println("old file leftover is: " + leftOver);
+
 				byte[] temp;
 				try {
 					temp = readRemoteBlock(logicBlocks.get(oldBlockCount - 1));
@@ -156,16 +154,8 @@ public class FileImpl implements File, Serializable {
 			//如果newSize不能整除blockSize，
 			// 那么读出最后一个block的内容，复制相应长度到新block中
 
-			System.out.println("new size is less than old size:" + diff);
-
-//			for(int i = newBlockCount - 1; i < oldBlockCount; i++) {
-//				logicBlocks.remove(i);
-//			}
-
 			if(newSize % FileConstant.BLOCK_SIZE != 0) {
-				System.out.println("read old data:" + diff);
-				System.out.println(logicBlocks);
-				System.out.println(logicBlocks.get((int)newSize / FileConstant.BLOCK_SIZE));
+
 				byte[] temp;
 				try {
 					temp = readRemoteBlock(logicBlocks.get((int)newSize / FileConstant.BLOCK_SIZE));
@@ -190,7 +180,7 @@ public class FileImpl implements File, Serializable {
 				for(int i = newBlockCount; i < oldBlockCount; i++) {
 					logicBlocks.remove(i);
 				}
-				System.out.println("do not need old data");
+
 				fileMeta.setLogicBlocks(logicBlocks);
 				fileMeta.setBlockCount(newBlockCount);
 				fileMeta.setFileSize(newSize);
@@ -216,15 +206,13 @@ public class FileImpl implements File, Serializable {
 
 	@Override
 	public byte[] read(int length) {
+		// read out of bound
+		if(length + pointer > size()) {
+			throw new ErrorCode(9);
+		}
 		HashMap<Integer, LinkedHashMap<Id, Integer>>logicBlocks = fileMeta.getLogicBlocks();
 		byte[] total = new byte[(int) fileMeta.getFileSize()];
 		byte[] result = new byte[length];
-
-		try {
-			Registry registry = LocateRegistry.getRegistry("localhost");
-		} catch (RemoteException e) {
-			throw new ErrorCode(19);
-		}
 
 		for(Integer i : logicBlocks.keySet()) {
             LinkedHashMap<Id, Integer> duplicates = logicBlocks.get(i);
@@ -401,6 +389,7 @@ public class FileImpl implements File, Serializable {
                 } catch (ErrorCode e) {
 				    throw new ErrorCode(e.getErrorCode());
                 }
+                //随机选择的副本和对应创建的block id
 				System.out.println(bmc.getStringBMId() + ", " + block.getIntegerBlockId());
 				duplicates.put(new StringId(bmc.getStringBMId()), block.getIntegerBlockId());
 			}
@@ -412,8 +401,8 @@ public class FileImpl implements File, Serializable {
 		fileMeta.setBlockCount((int) ((totalFileSize % FileConstant.BLOCK_SIZE) == 0
 				? (totalFileSize / FileConstant.BLOCK_SIZE)
 				: (totalFileSize / FileConstant.BLOCK_SIZE) + 1));
-		System.out.println("before update fileMeta: " + fileMeta.toString());
-		//4. 写入完成后，将fileMeta的内容写回对应文件
+
+		//写入完成后，将fileMeta的内容写回对应服务器端
 		try {
 			
 			FMClient fmc = new FMClient(fileMeta.getFmId());
@@ -434,17 +423,17 @@ public class FileImpl implements File, Serializable {
                 BMClient bmc = new BMClient((StringId)entity.getKey());
                 Block blockRead = bmc.getBlock(new IntegerId((Integer)entity.getValue()));
                 blockData = blockRead.getBlockData();
-                System.out.println(new String(blockData, "utf-8"));
+                //System.out.println(new String(blockData, "utf-8"));
                 break;
             } catch (ErrorCode e) {
                 System.out.println(e.getMessage());
-                duplicates.remove(entity.getKey());
+                //duplicates.remove(entity.getKey());
             } catch (Exception e) {
                 throw new ErrorCode(1000);
             }
         }
 
-        if(duplicates.size() == 0) {
+        if(blockData == null) {
             blockData = new byte[FileConstant.BLOCK_SIZE];
             try {
                 throw new ErrorCode(16);

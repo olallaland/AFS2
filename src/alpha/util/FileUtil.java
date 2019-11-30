@@ -375,7 +375,7 @@ public class FileUtil {
                 throw new ErrorCode(1);
             }
         } else {
-            throw new ErrorCode(4);
+            // do nothing
         }
     }
 

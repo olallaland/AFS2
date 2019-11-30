@@ -38,7 +38,7 @@ public class BMServer extends Server implements IRemoteBM {
 	@Override
 	public Block getBlock(Id indexId) throws RemoteException {
 //		try {
-//			Thread.sleep(5000);
+//			Thread.sleep(2000);
 //		} catch (InterruptedException e) {
 //			System.out.println(e.getMessage());
 //		}
@@ -57,7 +57,7 @@ public class BMServer extends Server implements IRemoteBM {
 		try {
 			blockData = getBlockData(id);
 			blockMeta = getBlockMeta(id);
-		} catch (RuntimeException e) {
+		} catch (ErrorCode e) {
 			throw new ErrorCode(15);
 		}
 		block = new BlockImpl(indexId, bmId, blockData, blockMeta);
@@ -72,8 +72,8 @@ public class BMServer extends Server implements IRemoteBM {
 
 	@Override
 	public Block newBlock(byte[] b) throws RemoteException {
-		//		try {
-//			Thread.sleep(5000);
+//		try {
+//			Thread.sleep(2000);
 //		} catch (InterruptedException e) {
 //			System.out.println(e.getMessage());
 //		}
@@ -151,7 +151,7 @@ public class BMServer extends Server implements IRemoteBM {
 
 
 	@Override
-	public String getbmId() throws Exception {
+	public String getbmId() throws RemoteException {
 		// TODO Auto-generated method stub
 		return null;
 	}

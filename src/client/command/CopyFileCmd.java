@@ -24,8 +24,6 @@ public class CopyFileCmd extends Command {
 	}
 
 	private void copyFile(String[] cmds) {
-		String srcFmStringId = "";
-		String destFmStringId = "";
 		String srcFMId = cmds[1];
 		String srcFilename = cmds[2];
 		String destFMId = cmds[3];

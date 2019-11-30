@@ -36,8 +36,6 @@ public class CatFileCmd extends Command {
 		long oldPointer;
 
 		HashMap<Integer, LinkedList<BlockImpl>> logicBlocks = new HashMap<Integer, LinkedList<BlockImpl>>();
-		System.out.println("the input fmlayer id: " + sfmId);
-		System.out.println("the input filename " + filename);
 
 		try{
 			fm = new FMClient(new StringId(sfmId));
